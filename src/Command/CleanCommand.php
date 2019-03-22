@@ -129,11 +129,6 @@ class CleanCommand extends Command
                 }
             }            
         }    
-        foreach ($this->options['excludes']['packages'] as $exclude) {
-            if (preg_match(sprintf('~%s~', $exclude), $packageName)) {
-                return true;
-            }
-        }
         return false;
     }
 
