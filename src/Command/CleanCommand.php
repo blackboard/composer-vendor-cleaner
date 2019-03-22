@@ -344,7 +344,10 @@ class CleanCommand extends Command
 
                 $output->writeln(sprintf('Found package %s', $vendorDir . '/' . $packageDir),
                     OutputInterface::OUTPUT_NORMAL);
-
+                if($packageDir === "doctrine/dbal"){
+                    $cjs = file_get_contents($composerJson);
+                    print $cjs;
+                }    
                 $packages[] = new Package($this->baseDir, $vendorDir, $packageDir,
                     $this->parseJsonFromFile($composerJson));
             }
