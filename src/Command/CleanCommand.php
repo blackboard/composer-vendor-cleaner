@@ -89,6 +89,7 @@ class CleanCommand extends Command
         }
 
         $this->filesystem = new Filesystem();
+        print_r($this->options['excludes']['packages']);
 
         foreach ($this->getPackages($output) as $package) {
             if ($this->isExcludedPackage($package->getName())) {
@@ -110,6 +111,24 @@ class CleanCommand extends Command
      */
     protected function isExcludedPackage($packageName)
     {
+        if($packageName === "doctrine/dbal"){
+            $output->writeln(sprintf('Found "%s"', $package->getName()));
+            foreach ($this->options['excludes']['packages'] as $exclude) {
+                $output->writeln(sprintf('Checking "%s matches ~%s~"', $package->getName(), $exclude));
+                if (preg_match(sprintf('~%s~', $exclude), $packageName)) {
+                    $output->writeln(sprintf('Now excluding %s', $package->getName(), $exclude));     
+                    return true;
+                }else{
+                    $output->writeln(sprintf('Did not match "%s matches ~%s~"', $package->getName(), $exclude));
+                }                    
+            }            
+        }else{
+            foreach ($this->options['excludes']['packages'] as $exclude) {
+                if (preg_match(sprintf('~%s~', $exclude), $packageName)) {
+                    return true;
+                }
+            }            
+        }    
         foreach ($this->options['excludes']['packages'] as $exclude) {
             if (preg_match(sprintf('~%s~', $exclude), $packageName)) {
                 return true;
