@@ -112,23 +112,22 @@ class CleanCommand extends Command
     protected function isExcludedPackage($packageName)
     {
         if($packageName === "doctrine/dbal"){
-            $output->writeln(sprintf('Found "%s"', $package->getName()));
             foreach ($this->options['excludes']['packages'] as $exclude) {
-                $output->writeln(sprintf('Checking "%s matches ~%s~"', $package->getName(), $exclude));
+                print sprintf("Checking %s matches ~%s~ \n", $packageName, $exclude);
                 if (preg_match(sprintf('~%s~', $exclude), $packageName)) {
-                    $output->writeln(sprintf('Now excluding %s', $package->getName(), $exclude));     
+                    print sprintf("Now excluding %s\n", $packageName, $exclude);
                     return true;
                 }else{
-                    $output->writeln(sprintf('Did not match "%s matches ~%s~"', $package->getName(), $exclude));
-                }                    
-            }            
+                    print sprintf("Did not match %s matches ~%s~ \n", $packageName, $exclude);
+                }
+            }
         }else{
             foreach ($this->options['excludes']['packages'] as $exclude) {
                 if (preg_match(sprintf('~%s~', $exclude), $packageName)) {
                     return true;
                 }
-            }            
-        }    
+            }
+        }
         return false;
     }
 
@@ -344,10 +343,10 @@ class CleanCommand extends Command
 
                 $output->writeln(sprintf('Found package %s', $vendorDir . '/' . $packageDir),
                     OutputInterface::OUTPUT_NORMAL);
-                if($packageDir === "doctrine/dbal"){
+                if($vendorDir === "doctrine" && $packageDir === "dbal"){
                     $cjs = file_get_contents($composerJson);
                     print $cjs;
-                }    
+                }
                 $packages[] = new Package($this->baseDir, $vendorDir, $packageDir,
                     $this->parseJsonFromFile($composerJson));
             }
